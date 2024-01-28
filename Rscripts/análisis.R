@@ -15,7 +15,11 @@ promedio
 menores <- Button[which(Button$temp < quantile(Button$temp, 0.05)), ]
 mayores <- Button[which(Button$temp > quantile(Button$temp, 0.95)), ]
 Button %>% ggplot(aes(tiempo, temp)) + geom_point()
-Button %>% filter(temp < 34.0)
+p <- Button %>% filter(temp < 34.0)
+
+percent <- nrow(p) * 100 / nrow(Button)
+percent
+
 
 
 
