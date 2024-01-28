@@ -1,6 +1,8 @@
 ---
 title: "Análisis"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -14,13 +16,13 @@ library(readxl)
 ## Button E 410
 
 ```{r analisis, echo = FALSE}
-Button<- read_excel("../Data/Button 862(E 410) 2024-01-04 16_36_19 Argentina Standard Time (Data Argentina Standard Time).xlsx")
+Button<- read_excel("../Data/Button 863(E 1683) 2024-01-04 16_22_54 Argentina Standard Time (Data Argentina Standard Time).xlsx")
 Button <- Button %>% setNames(c("num", "tiempo", "temp" ))
 max <- Button$temp[which.max(Button$temp)]
 min <- Button$temp[which.min(Button$temp)]
 promedio <- mean(Button$temp)
-p <- Button %>% filter(temp < 34.0)
-b <- Button %>% filter(temp > 36)
+p <- Button %>% filter(temp < 24)
+b <- Button %>% filter(temp > 26)
 percent_menor <- nrow(p) * 100 / nrow(Button)
 percent_mayor <- nrow(b) * 100 / nrow(Button)
 ```
@@ -54,8 +56,8 @@ min
 ```{r, echo = FALSE}
 Button %>% ggplot(aes(tiempo, temp)) + 
   geom_point() + 
-  geom_hline(yintercept = 36) + 
-  geom_hline(yintercept = 34) + 
+  geom_hline(yintercept = 26) + 
+  geom_hline(yintercept = 24) + 
   xlab("Tiempo") + 
   ylab("Temperatura (°C)")
 ```
