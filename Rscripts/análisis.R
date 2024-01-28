@@ -14,6 +14,7 @@ min
 promedio
 menores <- Button[which(Button$temp < quantile(Button$temp, 0.05)), ]
 mayores <- Button[which(Button$temp > quantile(Button$temp, 0.95)), ]
+Button %>% ggplot(aes(tiempo, temp)) + geom_point()
 
 
 
