@@ -1,0 +1,86 @@
+---
+title: "Análisis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+```
+
+## Button E 410
+
+```{r analisis, echo = FALSE}
+Button<- read_excel("../Data/Button 862(E 410) 2024-01-04 16_36_19 Argentina Standard Time (Data Argentina Standard Time).xlsx")
+Button <- Button %>% setNames(c("num", "tiempo", "temp" ))
+max <- Button$temp[which.max(Button$temp)]
+min <- Button$temp[which.min(Button$temp)]
+promedio <- mean(Button$temp)
+p <- Button %>% filter(temp < 34.0)
+b <- Button %>% filter(temp > 36)
+percent_menor <- nrow(p) * 100 / nrow(Button)
+percent_mayor <- nrow(b) * 100 / nrow(Button)
+```
+
+### Temperaturas por porcentaje
+
+```{r, echo = FALSE}
+
+quantile(Button$temp, c(seq(0, 1, 0.05)))
+```
+
+### Temperatura promedio:
+
+```{r , echo=FALSE}
+promedio
+```
+
+### Temperatura máxima:
+
+```{r, echo = FALSE}
+max
+```
+
+### Temperatura mínima:
+
+```{r, echo = FALSE}
+min
+```
+
+
+```{r, echo = FALSE}
+Button %>% ggplot(aes(tiempo, temp)) + 
+  geom_point() + 
+  geom_hline(yintercept = 36) + 
+  geom_hline(yintercept = 34) + 
+  xlab("Tiempo") + 
+  ylab("Temperatura (°C)")
+```
+
+### Datos por debajo del límite de tolerancia:
+
+```{r, echo= FALSE}
+p
+```
+### Porcentaje de datos por debajo del límite de tolerancia:
+
+```{r, echo=FALSE}
+percent_menor
+
+```
+
+### Datos por encima del límite de tolerancia:
+
+```{r, echo=FALSE}
+b
+```
+
+### Porcentaje de datos por encima del límite de tolerancia:
+
+```{r, echo=FALSE}
+percent_mayor
+```
+

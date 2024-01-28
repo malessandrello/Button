@@ -14,11 +14,19 @@ min
 promedio
 menores <- Button[which(Button$temp < quantile(Button$temp, 0.05)), ]
 mayores <- Button[which(Button$temp > quantile(Button$temp, 0.95)), ]
-Button %>% ggplot(aes(tiempo, temp)) + geom_point()
-p <- Button %>% filter(temp < 34.0)
+Button %>% ggplot(aes(tiempo, temp)) + 
+  geom_point() + 
+  geom_hline(yintercept = 36) + 
+  geom_hline(yintercept = 34) + 
+  xlab("Tiempo") + 
+  ylab("Temperatura (°C)")
 
-percent <- nrow(p) * 100 / nrow(Button)
-percent
+p <- Button %>% filter(temp < 34.0)
+b <- Button %>% filter(temp > 36)
+percent_menor <- nrow(p) * 100 / nrow(Button)
+percent_mayor <- nrow(b) * 100 / nrow(Button)
+percent_mayor
+percent_menor
 
 
 
