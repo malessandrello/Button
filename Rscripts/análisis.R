@@ -3,7 +3,7 @@ library(ggplot2)
 library(tidyverse)
 library(readxl)
 
-Button<- read_excel("Data/Button 862(E 410) 2024-01-04 16_36_19 Argentina Standard Time (Data Argentina Standard Time).xlsx")
+Button<- read_excel("Data.xlsx")
 Button <- Button %>% setNames(c("num", "tiempo", "temp" ))
 max <- Button$temp[which.max(Button$temp)]
 min <- Button$temp[which.min(Button$temp)]
