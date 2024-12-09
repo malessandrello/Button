@@ -1,0 +1,131 @@
+---
+title: "Análisis Buttons"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+runtime: shiny
+params: 
+  data: NA
+  min: NA 
+  max: NA 
+  promedio: NA
+  desv_inf: NA
+  desv_sup: NA
+  desv_inf1: NA
+  desv_sup1: NA
+  percent_mayor: NA
+  percent_menor: NA
+  percent_menor1: NA
+  percent_mayor1: NA
+  inicio: NA
+  fin: NA
+  estufas: NA
+  datos_estufas: NA
+  n_button: NA
+  conclusiones: NA
+
+---
+
+```{r setup, include=FALSE}
+library(shiny)
+library(bslib)
+library(dplyr)
+library(readxl)
+library(tidyverse)
+library(shinyWidgets)
+library(shinycssloaders)
+library(plotly)
+library(flextable)
+library(DT)
+library(insight)
+```
+
+Row{ data-height=250}
+-----------------------------------------------------------------------
+#### **DATOS DEL REGISTRO**
+
+```{r }
+HTML(paste0("<b>", "ESTUFA: ","</b>", params$estufas, "</br>",
+            "<b>","BUTTON: ","</b>", params$n_button, "</br>",
+            "<b>","FACTOR DE CORRECCIÓN: ","</b>", params$datos_estufas$factor_correc, "</br>",
+            "<b>","TEMPERATURA DE TRABAJO: ","</b>", params$datos_estufas$lim_inf, " °C ", " - ",
+    params$datos_estufas$lim_sup, " °C", "</br>",
+    "<b>","INICIO DE REGISTRO: ","</b>", params$inicio, "</br>",
+    "<b>","FIN DE REGISTRO: ","</b>", params$fin, "</br>",
+    "<b>","TEMPERATURA MÁXIMA: ","</b>", params$max, " °C", "</br>",
+    "<b>","TEMPERATURA MÍNIMA: ","</b>", params$min, " °C", "</br>",
+    "<b>","TEMPERATURA PROMEDIO: ","</b>", params$promedio, " °C"))
+```
+
+
+Row {data-height=600}
+---------------------------------------------------------------------------------------
+
+### **VISUALIZACIÓN DE DATOS**
+
+```{r fig.width=2000, fig.align='right'}
+p <- params$data %>% ggplot(aes(.data[["Fecha"]], .data[["Temperatura_corregida"]])) +
+      geom_point() +
+      geom_hline(yintercept = params$datos_estufas$lim_sup) +
+      geom_hline(yintercept = params$datos_estufas$lim_inf) +
+      xlab("Fecha") +
+      ylab("Temperatura (°C)")
+    ggplotly(p, height = 500, width = 1350, dynamicTicks = TRUE)
+    
+
+```
+
+Row { style="height: auto !important;"}
+-------------------------------------------------------------------
+### **REGISTROS CON DESVÍOS POR DEBAJO DE LA TEMPERATURA DE TRABAJO**
+
+```{r }
+tabla1 <-  params$desv_inf %>%
+      knitr::kable() 
+     
+  tabla1
+  HTML(paste0("<b>","Porcentaje de desvíos: ", "</b>", params$percent_menor, " %"))
+```
+
+### **REGISTROS CON DESVÍOS POR ENCIMA DE LA TEMPERATURA DE TRABAJO**
+
+```{r} 
+tabla2 <-  params$desv_sup %>%
+      knitr::kable() 
+      
+  tabla2
+    HTML(paste0("<b>","Porcentaje de desvíos: ", "</b>", params$percent_mayor, " %"))
+```
+
+Row
+------------------------------------------------------------------------------
+### **DESVÍOS POR DEBAJO DEL LÍMITE DE TOLERANCIA MAYORES A 1 °C **
+
+```{r}
+tabla3 <-  params$desv_inf1%>%
+      knitr::kable() 
+      
+  tabla3
+   HTML(paste0("<b>Porcentaje de desvíos mayores a 1 °C por debajo del límite de tolerancia: </b>", params$percent_menor1, " %"))
+```
+
+
+### **DESVÍOS POR ENCIMA DEL LÍMITE DE TOLERANCIA MAYORES A 1 °C **
+
+```{r}
+tabla4 <-  params$desv_sup1%>%
+      knitr::kable() 
+      
+  tabla4
+   HTML(paste0("<b>Porcentaje de desvíos mayores a 1 °C por debajo del límite de tolerancia: </b>", params$percent_mayor1, " %"))
+```
+
+Row {data-height=100}
+-------------------------------------------------------------------------------
+
+### **CONCLUSIONES**
+```{r}
+HTML(params$conclusiones)
+```
+
